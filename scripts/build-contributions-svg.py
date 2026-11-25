@@ -65,13 +65,13 @@ def fallback_calendar():
 
 def build(calendar: dict) -> str:
     bg = webp_data_uri(ROOT / "assets" / "raster" / "contributions.webp")
-    w, h = 720, 216
+    w, h = 720, 234
     weeks = calendar["weeks"]
     cols = len(weeks)
     cell, gap = 9, 3
     grid_w = cols * (cell + gap) - gap
     ox = (w - grid_w) / 2
-    oy = 132
+    oy = 148
     cells = []
     for c, week in enumerate(weeks):
         for r, day in enumerate(week["contributionDays"]):
@@ -94,7 +94,7 @@ def build(calendar: dict) -> str:
   <title id="ct">Contribution forest</title>
   <desc id="cd">{calendar["totalContributions"]} contributions in the last year.</desc>
   <defs>
-    <clipPath id="gridZone"><rect x="0" y="118" width="{w}" height="98"/></clipPath>
+    <clipPath id="gridZone"><rect x="0" y="128" width="{w}" height="106"/></clipPath>
     <filter id="cellGlow" x="-80%" y="-80%" width="260%" height="260%">
       <feGaussianBlur stdDeviation="1.1" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -113,7 +113,7 @@ def build(calendar: dict) -> str:
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
   <g clip-path="url(#gridZone)" opacity="0.95">{''.join(cells)}</g>
-  <rect class="sweep-bar" clip-path="url(#gridZone)" x="0" y="118" width="720" height="90" fill="url(#sweep)"/>
+  <rect class="sweep-bar" clip-path="url(#gridZone)" x="0" y="128" width="720" height="100" fill="url(#sweep)"/>
 </svg>"""
 
 

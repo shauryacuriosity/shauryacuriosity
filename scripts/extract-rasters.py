@@ -13,13 +13,13 @@ SRC = ROOT / "assets" / "source" / "concept_v7b.png"
 OUT = ROOT / "assets" / "raster"
 
 SECTIONS = {
-    # Aligned to concept_v7b.png proportions (720x1280)
-    "hero-lower": (0, 76, 720, 302),
-    "hero": (0, 0, 720, 302),
-    "contributions": (0, 302, 720, 518),
-    "cities": (0, 518, 720, 804),
-    "planets": (0, 804, 720, 1006),
-    "orbital": (0, 1006, 720, 1280),
+    # Boundaries from concept_v7b.png content scan (sums to 1280)
+    "hero-lower": (0, 118, 720, 486),
+    "hero": (0, 0, 720, 486),
+    "contributions": (0, 486, 720, 720),
+    "cities": (0, 720, 720, 900),
+    "planets": (0, 900, 720, 1040),
+    "orbital": (0, 1040, 720, 1280),
 }
 
 

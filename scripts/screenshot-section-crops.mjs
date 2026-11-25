@@ -9,9 +9,9 @@ const root = join(import.meta.dirname, "..");
 
 const b64 = readFileSync(join(root, "assets/profile.svg")).toString("base64");
 const sections = [
-  { name: "hero", y: 0, h: 302 },
-  { name: "contributions", y: 302, h: 216 },
-  { name: "cities", y: 518, h: 286 },
+  { name: "hero", y: 0, h: 486 },
+  { name: "contributions", y: 486, h: 234 },
+  { name: "cities", y: 720, h: 180 },
 ];
 
 const browser = await chromium.launch({ deviceScaleFactor: 2 });

@@ -29,8 +29,8 @@ def write(path: Path, content: str) -> None:
 
 def build_hero() -> None:
     bg_lower = webp_data_uri(RASTER / "hero-lower.webp")
-    w, h = 720, 302
-    title_h = 76
+    w, h = 720, 486
+    title_h = 92
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="heroTitle">
   <title id="heroTitle">Shaurya Kansal</title>
@@ -58,6 +58,7 @@ def build_hero() -> None:
   </defs>
   <image href="{bg_lower}" x="0" y="{title_h}" width="{w}" height="{h - title_h}" preserveAspectRatio="xMidYMid slice"/>
   <rect x="0" y="0" width="{w}" height="{title_h}" fill="url(#titleSky)"/>
+  <rect x="0" y="{title_h}" width="{w}" height="32" fill="url(#titleSky)" opacity="0.96"/>
   <text x="360" y="38" text-anchor="middle" fill="#e8f6f4" font-family="system-ui,-apple-system,sans-serif" font-size="24" font-weight="300" letter-spacing="0.24em">SHAURYA KANSAL</text>
   <text x="360" y="60" text-anchor="middle" fill="#b8d0d8" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.06em">Founder, SCYCLE AI // building Yuga</text>
   <rect class="motion aurora-band" x="-40" y="{title_h - 8}" width="800" height="40" fill="url(#aurora)"/>
@@ -114,12 +115,12 @@ def monument_blueprints() -> dict[str, str]:
 def build_cities() -> None:
     bg = webp_data_uri(RASTER / "cities.webp")
     panels = [
-        ("sydney", 10, 56, 228, 196, 0),
-        ("delhi", 245, 56, 231, 196, 4),
-        ("munich", 486, 56, 226, 196, 8),
+        ("sydney", 10, 48, 228, 124, 0),
+        ("delhi", 245, 48, 231, 124, 4),
+        ("munich", 486, 48, 226, 124, 8),
     ]
     bp = monument_blueprints()
-    w, h = 720, 286
+    w, h = 720, 180
     dur = 12
     panel_clips = []
     panel_groups = []
@@ -161,18 +162,16 @@ def build_cities() -> None:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <rect x="0" y="0" width="{w}" height="48" fill="#060a0e" opacity="0.55"/>
-  <text x="360" y="31" text-anchor="middle" fill="#c8e8f0" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.28em">SYDNEY · DELHI · MUNICH</text>
-  <path class="motion arc" d="M 228 172 Q 360 142 492 172" fill="none" stroke="#3cc8b8" stroke-width="1.2" opacity="0.55"/>
+  <path class="motion arc" d="M 228 118 Q 360 98 492 118" fill="none" stroke="#3cc8b8" stroke-width="1.2" opacity="0.45"/>
   {''.join(panel_groups)}
-  <text x="360" y="278" text-anchor="middle" fill="#6a98a8" font-size="8.5" letter-spacing="0.16em">engineered live</text>
+  <text x="360" y="173" text-anchor="middle" fill="#6a98a8" font-size="7.5" letter-spacing="0.16em" opacity="0.85">engineered live</text>
 </svg>"""
     write(ASSETS / "cities.svg", svg)
 
 
 def build_planets() -> None:
     bg = webp_data_uri(RASTER / "planets.webp")
-    w, h = 720, 202
+    w, h = 720, 140
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-labelledby="planetsTitle">
   <title id="planetsTitle">Yuga, Cyra, Research</title>
@@ -203,7 +202,7 @@ def build_planets() -> None:
 
 def build_orbital() -> None:
     bg = webp_data_uri(RASTER / "orbital.webp")
-    w, h = 720, 274
+    w, h = 720, 240
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-labelledby="orbitalTitle">
   <title id="orbitalTitle">Orbital garden</title>
@@ -232,7 +231,7 @@ def build_orbital() -> None:
     <circle cx="520" cy="95" r="1.2"/><circle cx="545" cy="88" r="1" style="animation-delay:.6s"/><circle cx="568" cy="102" r=".9" style="animation-delay:1.1s"/>
     <circle cx="595" cy="92" r="1.1" style="animation-delay:1.4s"/>
   </g>
-  <text x="360" y="262" text-anchor="middle" fill="#a8d0c0" font-family="system-ui,sans-serif" font-size="9" letter-spacing="0.1em">BUILDING WITH INTENTION. FOR A FUTURE THAT GROWS.</text>
+  <text x="360" y="228" text-anchor="middle" fill="#a8d0c0" font-family="system-ui,sans-serif" font-size="8.5" letter-spacing="0.09em">BUILDING WITH INTENTION. FOR A FUTURE THAT GROWS.</text>
 </svg>"""
     write(ASSETS / "orbital-garden.svg", svg)
 
