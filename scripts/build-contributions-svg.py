@@ -203,6 +203,26 @@ def build(calendar: dict) -> str:
         for r, label in WEEKDAYS
     )
 
+    leg_sq, leg_gap = 7, 2
+    legend_y = grid_bottom + 18
+    legend_right = w - 24
+    block_w = 5 * leg_sq + 4 * leg_gap
+    leg_cells = []
+    x = legend_right - 30 - block_w
+    for i in range(5):
+        leg_cells.append(
+            f'<rect x="{x:.1f}" y="{legend_y - leg_sq + 1:.1f}" width="{leg_sq}" height="{leg_sq}" '
+            f'rx="1.5" fill="{LEVEL_FILL[i]}"/>'
+        )
+        x += leg_sq + leg_gap
+    legend = (
+        f'<text x="{legend_right - 30 - block_w - 6:.1f}" y="{legend_y:.1f}" text-anchor="end" '
+        f'fill="#687e72" font-family="system-ui,sans-serif" font-size="8">Less</text>'
+        f'{"".join(leg_cells)}'
+        f'<text x="{legend_right:.1f}" y="{legend_y:.1f}" text-anchor="end" fill="#687e72" '
+        f'font-family="system-ui,sans-serif" font-size="8">More</text>'
+    )
+
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="ct cd">
   <title id="ct">Contribution forest</title>
@@ -219,6 +239,7 @@ def build(calendar: dict) -> str:
       <stop offset="100%" stop-color="#c8ffd8" stop-opacity="0"/>
     </linearGradient>
     <clipPath id="gridZone"><rect x="0" y="{FLOOR_TOP}" width="{w}" height="{h - FLOOR_TOP}"/></clipPath>
+    <clipPath id="cellGrid"><rect x="{ox:.1f}" y="{oy:.1f}" width="{grid_w:.1f}" height="{grid_h:.1f}"/></clipPath>
     <filter id="cellGlow" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="0.7" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -237,12 +258,15 @@ def build(calendar: dict) -> str:
   {month_labels}
   {weekday_labels}
   <g clip-path="url(#gridZone)">
-    {''.join(cells)}
-    <g class="light-wave" opacity="0.65" filter="url(#waveBlur)">
-      <rect x="-280" y="{oy}" width="360" height="{grid_h}" fill="url(#waveGrad)">
-        <animateTransform attributeName="transform" type="translate" values="-720 0;720 0" dur="14s" repeatCount="indefinite"/>
-      </rect>
+    <g clip-path="url(#cellGrid)">
+      {''.join(cells)}
+      <g class="light-wave" opacity="0.65" filter="url(#waveBlur)">
+        <rect x="-280" y="{oy}" width="360" height="{grid_h}" fill="url(#waveGrad)">
+          <animateTransform attributeName="transform" type="translate" values="-720 0;720 0" dur="14s" repeatCount="indefinite"/>
+        </rect>
+      </g>
     </g>
+    {legend}
   </g>
 </svg>"""
 
