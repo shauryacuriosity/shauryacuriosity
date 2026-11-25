@@ -91,19 +91,8 @@ def main() -> None:
         body, defs_children, meta = strip_root(svg)
         master_defs.extend(defs_children)
 
-        # Nested SVG slices clip reliably on GitHub (group clip-path often bleeds).
-        layer = ET.Element(
-            svg_tag("svg"),
-            {
-                "x": "0",
-                "y": str(int(y)),
-                "width": str(int(meta["w"])),
-                "height": str(int(meta["h"])),
-                "viewBox": f"0 0 {int(meta['w'])} {int(meta['h'])}",
-                "overflow": "hidden",
-                "aria-hidden": "true",
-            },
-        )
+        layer = ET.Element(svg_tag("g"))
+        layer.attrib["transform"] = f"translate(0,{int(y)})"
         for el in body:
             layer.append(el)
         layers.append(layer)
