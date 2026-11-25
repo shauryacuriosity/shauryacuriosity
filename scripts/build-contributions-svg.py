@@ -72,8 +72,8 @@ def build(calendar: dict) -> str:
     cell, gap = 9, 3
     grid_w = cols * (cell + gap) - gap
     ox = (w - grid_w) / 2
-    grid_top = 128
-    oy = 142
+    grid_top = 126
+    oy = 140
     row_h = cell + gap
     grid_bottom = oy + 7 * row_h - gap
     label_y = grid_top + 14
@@ -107,27 +107,18 @@ def build(calendar: dict) -> str:
   <desc id="cd">{calendar["totalContributions"]} contributions in the last year.</desc>
   <defs>
     <clipPath id="gridZone"><rect x="0" y="{grid_top}" width="{w}" height="{grid_bottom - grid_top + 8}"/></clipPath>
-    <linearGradient id="gridShimmer" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#a0ffc0" stop-opacity="0"/>
-      <stop offset="48%" stop-color="#d0ffe8" stop-opacity="0.08"/>
-      <stop offset="52%" stop-color="#d0ffe8" stop-opacity="0.08"/>
-      <stop offset="100%" stop-color="#a0ffc0" stop-opacity="0"/>
-    </linearGradient>
     <filter id="cellGlow" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="0.8" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
     <style>
-      @keyframes softSweep {{ 0% {{ transform: translateX(-540px); opacity: 0; }} 30% {{ opacity: 1; }} 70% {{ opacity: 1; }} 100% {{ transform: translateX(540px); opacity: 0; }} }}
-      .soft-sweep {{ animation: softSweep 11s ease-in-out infinite; }}
-      @media (prefers-reduced-motion: reduce) {{ .soft-sweep, rect animate {{ display: none; }} }}
+      @media (prefers-reduced-motion: reduce) {{ rect animate {{ display: none; }} }}
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <rect x="0" y="{grid_top - 4}" width="{w}" height="{grid_bottom - grid_top + 28}" fill="#0a1210" opacity="0.94"/>
+  <rect x="0" y="104" width="{w}" height="{grid_bottom - 100}" fill="#0a1210" opacity="1"/>
   {month_labels}
   <g clip-path="url(#gridZone)">{''.join(cells)}</g>
-  <rect class="soft-sweep" clip-path="url(#gridZone)" x="-180" y="{oy}" width="360" height="{grid_bottom - oy}" fill="url(#gridShimmer)" opacity="0.5"/>
 </svg>"""
 
 

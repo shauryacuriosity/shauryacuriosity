@@ -32,9 +32,9 @@ def build_hero() -> None:
     sky_cap = webp_data_uri(RASTER / "hero-sky-cap.webp")
     w, h = 720, 486
     title_h = 92
-    paint_y = 72
+    paint_y = 56
     img_h = h - paint_y
-    exhaust_x, exhaust_y = 524, round(paint_y + 266 * (img_h / 368))
+    exhaust_x, exhaust_y = 522, round(paint_y + 268 * (img_h / 368))
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="heroTitle">
   <title id="heroTitle">Shaurya Kansal</title>
@@ -61,8 +61,8 @@ def build_hero() -> None:
     </style>
   </defs>
   <image href="{bg_lower}" x="0" y="{paint_y}" width="{w}" height="{img_h}" preserveAspectRatio="xMidYMid slice"/>
-  <image href="{sky_cap}" x="0" y="{paint_y}" width="{w}" height="72" preserveAspectRatio="none" opacity="0.45" filter="url(#skyBlur)"/>
-  <rect x="0" y="{paint_y}" width="{w}" height="88" fill="url(#skyFeather)"/>
+  <image href="{sky_cap}" x="0" y="{paint_y - 6}" width="{w}" height="88" preserveAspectRatio="none" opacity="0.5" filter="url(#skyBlur)"/>
+  <rect x="0" y="{title_h - 8}" width="{w}" height="{paint_y - title_h + 104}" fill="url(#skyFeather)"/>
   <rect x="0" y="0" width="{w}" height="{title_h}" fill="url(#titleSky)"/>
   <text x="360" y="38" text-anchor="middle" fill="#e8f6f4" font-family="system-ui,-apple-system,sans-serif" font-size="24" font-weight="300" letter-spacing="0.24em">SHAURYA KANSAL</text>
   <text x="360" y="60" text-anchor="middle" fill="#b8d0d8" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.06em">Founder, SCYCLE AI // building Yuga</text>
@@ -80,8 +80,8 @@ def build_hero() -> None:
     <circle cx="88" cy="78" r="1"/><circle cx="310" cy="72" r="1.1" style="animation-delay:.5s"/><circle cx="540" cy="68" r=".9" style="animation-delay:1.1s"/>
   </g>
   <g class="motion exhaust-f">
-    <ellipse cx="{exhaust_x}" cy="{exhaust_y}" rx="20" ry="11" fill="url(#exhaust)" opacity=".88"/>
-    <ellipse cx="{exhaust_x}" cy="{exhaust_y + 6}" rx="12" ry="18" fill="url(#plume)" opacity=".5"><animate attributeName="ry" values="16;22;17" dur="2.2s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="{exhaust_x}" cy="{exhaust_y}" rx="16" ry="9" fill="url(#exhaust)" opacity=".82"/>
+    <ellipse cx="{exhaust_x}" cy="{exhaust_y + 4}" rx="9" ry="14" fill="url(#plume)" opacity=".42"><animate attributeName="ry" values="12;18;13" dur="2.2s" repeatCount="indefinite"/></ellipse>
   </g>
 </svg>"""
     write(ASSETS / "hero.svg", svg)
@@ -212,10 +212,11 @@ def build_orbital() -> None:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
+  <rect x="0" y="202" width="{w}" height="38" fill="#080c10" opacity="0.97"/>
+  <text x="360" y="225" text-anchor="middle" fill="#a8c8b8" font-family="system-ui,sans-serif" font-size="7.5" letter-spacing="0.1em">BUILDING WITH INTENTION. FOR A FUTURE THAT GROWS.</text>
   <g clip-path="url(#shimmerClip)">
-    <rect class="motion shimmer-band" x="-180" y="36" width="360" height="140" fill="url(#shimmer)"/>
     <g class="motion ship">
-      <ellipse cx="175" cy="148" rx="24" ry="7" fill="#60e8ff" opacity=".28"><animate attributeName="opacity" values=".18;.4;.2" dur="2s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="175" cy="148" rx="24" ry="7" fill="#60e8ff" opacity=".22"><animate attributeName="opacity" values=".15;.32;.18" dur="2s" repeatCount="indefinite"/></ellipse>
     </g>
   </g>
 </svg>"""
