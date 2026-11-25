@@ -29,7 +29,6 @@ def write(path: Path, content: str) -> None:
 
 def build_hero() -> None:
     bg_lower = webp_data_uri(RASTER / "hero-lower.webp")
-    sky_cap = webp_data_uri(RASTER / "hero-sky-cap.webp")
     w, h = 720, 486
     title_h = 92
     paint_y = 56
@@ -43,8 +42,7 @@ def build_hero() -> None:
     <radialGradient id="plume" cx="50%" cy="0%" r="80%"><stop offset="0%" stop-color="#fff" stop-opacity="0.65"/><stop offset="50%" stop-color="#ffe0a0" stop-opacity="0.25"/><stop offset="100%" stop-color="#88c8ff" stop-opacity="0"/></radialGradient>
     <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#40e8d0" stop-opacity="0"/><stop offset="50%" stop-color="#60ffd8" stop-opacity="0.22"/><stop offset="100%" stop-color="#40e8d0" stop-opacity="0"/></linearGradient>
     <linearGradient id="titleSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#141e2c"/><stop offset="100%" stop-color="#1c2a38"/></linearGradient>
-    <linearGradient id="skyFeather" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#141e2c" stop-opacity="0.98"/><stop offset="45%" stop-color="#1a2838" stop-opacity="0.55"/><stop offset="100%" stop-color="#243040" stop-opacity="0"/></linearGradient>
-    <filter id="skyBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="8"/></filter>
+    <linearGradient id="skyFeather" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#141e2c" stop-opacity="0.95"/><stop offset="35%" stop-color="#1a2838" stop-opacity="0.5"/><stop offset="75%" stop-color="#243040" stop-opacity="0.12"/><stop offset="100%" stop-color="#243040" stop-opacity="0"/></linearGradient>
     <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     <style>
       @keyframes dash {{ to {{ stroke-dashoffset: -48; }} }}
@@ -61,8 +59,7 @@ def build_hero() -> None:
     </style>
   </defs>
   <image href="{bg_lower}" x="0" y="{paint_y}" width="{w}" height="{img_h}" preserveAspectRatio="xMidYMid slice"/>
-  <image href="{sky_cap}" x="0" y="{paint_y - 6}" width="{w}" height="88" preserveAspectRatio="none" opacity="0.5" filter="url(#skyBlur)"/>
-  <rect x="0" y="{title_h - 8}" width="{w}" height="{paint_y - title_h + 104}" fill="url(#skyFeather)"/>
+  <rect x="0" y="{title_h - 10}" width="{w}" height="{paint_y - title_h + 120}" fill="url(#skyFeather)"/>
   <rect x="0" y="0" width="{w}" height="{title_h}" fill="url(#titleSky)"/>
   <text x="360" y="38" text-anchor="middle" fill="#e8f6f4" font-family="system-ui,-apple-system,sans-serif" font-size="24" font-weight="300" letter-spacing="0.24em">SHAURYA KANSAL</text>
   <text x="360" y="60" text-anchor="middle" fill="#b8d0d8" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.06em">Founder, SCYCLE AI // building Yuga</text>
@@ -212,8 +209,8 @@ def build_orbital() -> None:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <rect x="0" y="202" width="{w}" height="38" fill="#080c10" opacity="0.97"/>
-  <text x="360" y="225" text-anchor="middle" fill="#a8c8b8" font-family="system-ui,sans-serif" font-size="7.5" letter-spacing="0.1em">BUILDING WITH INTENTION. FOR A FUTURE THAT GROWS.</text>
+  <rect x="0" y="198" width="{w}" height="42" fill="#070b0f"/>
+  <text x="360" y="223" text-anchor="middle" fill="#b8d4c8" font-family="system-ui,sans-serif" font-size="7.5" letter-spacing="0.1em">BUILDING WITH INTENTION. FOR A FUTURE THAT GROWS.</text>
   <g clip-path="url(#shimmerClip)">
     <g class="motion ship">
       <ellipse cx="175" cy="148" rx="24" ry="7" fill="#60e8ff" opacity=".22"><animate attributeName="opacity" values=".15;.32;.18" dur="2s" repeatCount="indefinite"/></ellipse>

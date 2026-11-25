@@ -72,8 +72,8 @@ def build(calendar: dict) -> str:
     cell, gap = 9, 3
     grid_w = cols * (cell + gap) - gap
     ox = (w - grid_w) / 2
-    grid_top = 126
-    oy = 140
+    grid_top = 124
+    oy = 136
     row_h = cell + gap
     grid_bottom = oy + 7 * row_h - gap
     label_y = grid_top + 14
@@ -106,7 +106,7 @@ def build(calendar: dict) -> str:
   <title id="ct">Contribution forest</title>
   <desc id="cd">{calendar["totalContributions"]} contributions in the last year.</desc>
   <defs>
-    <clipPath id="gridZone"><rect x="0" y="{grid_top}" width="{w}" height="{grid_bottom - grid_top + 8}"/></clipPath>
+    <clipPath id="gridZone"><rect x="0" y="{grid_top}" width="{w}" height="{grid_bottom - grid_top + 14}"/></clipPath>
     <filter id="cellGlow" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="0.8" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
