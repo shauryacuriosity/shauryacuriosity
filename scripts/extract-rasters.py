@@ -13,11 +13,13 @@ SRC = ROOT / "assets" / "source" / "concept_v7b.png"
 OUT = ROOT / "assets" / "raster"
 
 SECTIONS = {
-    "hero": (0, 0, 720, 308),
-    "contributions": (0, 308, 720, 505),
-    "cities": (0, 505, 720, 788),
-    "planets": (0, 788, 720, 1008),
-    "orbital": (0, 1008, 720, 1280),
+    # Aligned to concept_v7b.png proportions (720x1280)
+    "hero-lower": (0, 76, 720, 302),
+    "hero": (0, 0, 720, 302),
+    "contributions": (0, 302, 720, 518),
+    "cities": (0, 518, 720, 804),
+    "planets": (0, 804, 720, 1006),
+    "orbital": (0, 1006, 720, 1280),
 }
 
 
@@ -34,9 +36,9 @@ def main() -> None:
         meta[name] = {"box": box, "size": list(c.size), "bytes": path.stat().st_size}
     cities = im.crop(SECTIONS["cities"])
     for pname, box in {
-        "sydney": (8, 52, 238, 248),
-        "delhi": (243, 52, 478, 248),
-        "munich": (483, 52, 712, 248),
+        "sydney": (10, 58, 238, 252),
+        "delhi": (245, 58, 476, 252),
+        "munich": (486, 58, 712, 252),
     }.items():
         c = cities.crop(box)
         path = OUT / f"city-{pname}.webp"

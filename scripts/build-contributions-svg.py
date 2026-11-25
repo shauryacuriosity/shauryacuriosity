@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "assets" / "contributions-forest.svg"
 LOGIN = os.environ.get("GITHUB_USER", "shauryacuriosity")
 
-LEVEL_FILL = ["#1a283020", "#1f6a3828", "#2a9a4888", "#3ed878aa", "#6cffaad8"]
+LEVEL_FILL = ["#14201888", "#1d5c3488", "#289450aa", "#3ed878cc", "#6cffaad8"]
 
 QUERY = """
 query($login: String!) {
@@ -65,41 +65,44 @@ def fallback_calendar():
 
 def build(calendar: dict) -> str:
     bg = webp_data_uri(ROOT / "assets" / "raster" / "contributions.webp")
-    w, h = 720, 197
+    w, h = 720, 216
     weeks = calendar["weeks"]
     cols = len(weeks)
     cell, gap = 9, 3
     grid_w = cols * (cell + gap) - gap
-    ox = (w - grid_w) / 2 + 1
-    oy = 121
+    ox = (w - grid_w) / 2
+    oy = 132
     cells = []
     for c, week in enumerate(weeks):
         for r, day in enumerate(week["contributionDays"]):
             count = day["contributionCount"]
             x = ox + c * (cell + gap)
             y = oy + r * (cell + gap)
+            if y + cell > h - 4:
+                continue
             lv = min(4, max(0, (0 if count == 0 else 1 + min(3, count // 4))))
             fill = LEVEL_FILL[lv if count else 0]
             delay = (c * 7 + r) % 40 * 0.07
             cells.append(
-                f'<rect x="{x:.1f}" y="{y:.1f}" width="{cell}" height="{cell}" rx="3" fill="{fill}"'
-                f' filter="url(#cellGlow)"><animate attributeName="opacity" values="0.65;1;0.8" dur="3.5s"'
+                f'<rect x="{x:.1f}" y="{y:.1f}" width="{cell}" height="{cell}" rx="3.2" fill="{fill}"'
+                f' filter="url(#cellGlow)"><animate attributeName="opacity" values="0.7;1;0.85" dur="3.5s"'
                 f' begin="{delay:.2f}s" repeatCount="indefinite"/></rect>'
             )
 
     return f"""<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-labelledby="ct cd">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="ct cd">
   <title id="ct">Contribution forest</title>
   <desc id="cd">{calendar["totalContributions"]} contributions in the last year.</desc>
   <defs>
+    <clipPath id="gridZone"><rect x="0" y="118" width="{w}" height="98"/></clipPath>
     <filter id="cellGlow" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="1.2" result="b"/>
+      <feGaussianBlur stdDeviation="1.1" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
     <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="#80ffa0" stop-opacity="0"/>
-      <stop offset="45%" stop-color="#b0ffc8" stop-opacity="0.35"/>
-      <stop offset="55%" stop-color="#b0ffc8" stop-opacity="0.35"/>
+      <stop offset="45%" stop-color="#b0ffc8" stop-opacity="0.3"/>
+      <stop offset="55%" stop-color="#b0ffc8" stop-opacity="0.3"/>
       <stop offset="100%" stop-color="#80ffa0" stop-opacity="0"/>
     </linearGradient>
     <style>
@@ -109,8 +112,8 @@ def build(calendar: dict) -> str:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <g opacity="0.92">{''.join(cells)}</g>
-  <rect class="sweep-bar" x="0" y="{oy - 6}" width="720" height="80" fill="url(#sweep)"/>
+  <g clip-path="url(#gridZone)" opacity="0.95">{''.join(cells)}</g>
+  <rect class="sweep-bar" clip-path="url(#gridZone)" x="0" y="118" width="720" height="90" fill="url(#sweep)"/>
 </svg>"""
 
 

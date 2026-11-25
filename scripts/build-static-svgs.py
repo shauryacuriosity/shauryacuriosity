@@ -28,15 +28,17 @@ def write(path: Path, content: str) -> None:
 
 
 def build_hero() -> None:
-    bg = webp_data_uri(RASTER / "hero.webp")
-    w, h = 720, 308
+    bg_lower = webp_data_uri(RASTER / "hero-lower.webp")
+    w, h = 720, 302
+    title_h = 76
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-labelledby="heroTitle">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="heroTitle">
   <title id="heroTitle">Shaurya Kansal</title>
   <defs>
     <radialGradient id="exhaust" cx="50%" cy="50%"><stop offset="0%" stop-color="#fff"/><stop offset="40%" stop-color="#ffe8a0"/><stop offset="100%" stop-color="#ff8800" stop-opacity="0"/></radialGradient>
     <linearGradient id="plume" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.5"/><stop offset="100%" stop-color="#88c8ff" stop-opacity="0"/></linearGradient>
     <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#40e8d0" stop-opacity="0"/><stop offset="50%" stop-color="#60ffd8" stop-opacity="0.25"/><stop offset="100%" stop-color="#40e8d0" stop-opacity="0"/></linearGradient>
+    <linearGradient id="titleSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#141e2c"/><stop offset="70%" stop-color="#1a2838"/><stop offset="100%" stop-color="#243040"/></linearGradient>
     <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     <style>
       @keyframes dash {{ to {{ stroke-dashoffset: -48; }} }}
@@ -54,33 +56,33 @@ def build_hero() -> None:
       {REDUCED}
     </style>
   </defs>
-  <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <rect x="0" y="0" width="{w}" height="78" fill="#0a1420" opacity="0.42"/>
-  <text x="360" y="41" text-anchor="middle" fill="#e8f6f4" font-family="system-ui,-apple-system,sans-serif" font-size="25" font-weight="300" letter-spacing="0.24em" paint-order="stroke" stroke="#0a1820" stroke-width="3">SHAURYA KANSAL</text>
-  <text x="360" y="64" text-anchor="middle" fill="#c0dce4" font-family="system-ui,sans-serif" font-size="11.5" letter-spacing="0.06em" paint-order="stroke" stroke="#0a1820" stroke-width="2">Founder, SCYCLE AI // building Yuga</text>
-  <rect class="motion aurora-band" x="-40" y="88" width="800" height="50" fill="url(#aurora)"/>
+  <image href="{bg_lower}" x="0" y="{title_h}" width="{w}" height="{h - title_h}" preserveAspectRatio="xMidYMid slice"/>
+  <rect x="0" y="0" width="{w}" height="{title_h}" fill="url(#titleSky)"/>
+  <text x="360" y="38" text-anchor="middle" fill="#e8f6f4" font-family="system-ui,-apple-system,sans-serif" font-size="24" font-weight="300" letter-spacing="0.24em">SHAURYA KANSAL</text>
+  <text x="360" y="60" text-anchor="middle" fill="#b8d0d8" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.06em">Founder, SCYCLE AI // building Yuga</text>
+  <rect class="motion aurora-band" x="-40" y="{title_h - 8}" width="800" height="40" fill="url(#aurora)"/>
   <!-- Flight paths -->
   <g fill="none" stroke="#5cf0e0" stroke-width="1.4" filter="url(#glow)" opacity=".85" class="motion">
-    <path class="path-pulse" d="M145 155 Q260 110 380 125 Q500 95 620 118"/>
-    <path class="path-pulse" style="animation-delay:-1.6s" d="M200 170 Q320 135 450 148"/>
-    <path class="path-pulse" style="animation-delay:-3.2s" d="M90 165 Q220 120 340 138"/>
-    <circle r="4" fill="#7dffd8" class="node-pulse"><animateMotion dur="5s" repeatCount="indefinite" path="M145 155 Q260 110 380 125 Q500 95 620 118"/></circle>
-    <circle r="3" fill="#afffe8" class="node-pulse" style="animation-delay:-2s"><animateMotion dur="7s" begin="1s" repeatCount="indefinite" path="M200 170 Q320 135 450 148"/></circle>
+    <path class="path-pulse" d="M145 171 Q260 126 380 141 Q500 111 620 134"/>
+    <path class="path-pulse" style="animation-delay:-1.6s" d="M200 186 Q320 151 450 164"/>
+    <path class="path-pulse" style="animation-delay:-3.2s" d="M90 181 Q220 136 340 154"/>
+    <circle r="4" fill="#7dffd8" class="node-pulse"><animateMotion dur="5s" repeatCount="indefinite" path="M145 171 Q260 126 380 141 Q500 111 620 134"/></circle>
+    <circle r="3" fill="#afffe8" class="node-pulse" style="animation-delay:-2s"><animateMotion dur="7s" begin="1s" repeatCount="indefinite" path="M200 186 Q320 151 450 164"/></circle>
   </g>
   <!-- Map nodes -->
   <g class="motion" fill="#6dffd0" filter="url(#glow)">
-    <circle class="node-pulse" cx="140" cy="152" r="3"/><circle class="node-pulse" cx="265" cy="128" r="4" style="animation-delay:.4s"/>
-    <circle class="node-pulse" cx="385" cy="122" r="3.5" style="animation-delay:.8s"/><circle class="node-pulse" cx="455" cy="138" r="3" style="animation-delay:1.2s"/>
-    <circle class="node-pulse" cx="535" cy="118" r="4" style="animation-delay:.6s"/><circle class="node-pulse" cx="610" cy="132" r="3" style="animation-delay:1s"/>
+    <circle class="node-pulse" cx="140" cy="168" r="3"/><circle class="node-pulse" cx="265" cy="144" r="4" style="animation-delay:.4s"/>
+    <circle class="node-pulse" cx="385" cy="138" r="3.5" style="animation-delay:.8s"/><circle class="node-pulse" cx="455" cy="154" r="3" style="animation-delay:1.2s"/>
+    <circle class="node-pulse" cx="535" cy="134" r="4" style="animation-delay:.6s"/><circle class="node-pulse" cx="610" cy="148" r="3" style="animation-delay:1s"/>
   </g>
   <g class="motion star" fill="#fff">
     <circle cx="88" cy="98" r="1"/><circle cx="310" cy="92" r="1.2" style="animation-delay:.5s"/><circle cx="540" cy="86" r="1" style="animation-delay:1.1s"/>
     <circle cx="680" cy="105" r=".9" style="animation-delay:1.7s"/>
   </g>
   <g class="motion rocket-g exhaust-f">
-    <ellipse cx="600" cy="252" rx="18" ry="32" fill="url(#exhaust)" opacity=".9"/>
-    <ellipse cx="600" cy="268" rx="10" ry="22" fill="url(#plume)" opacity=".55"/>
-    <ellipse cx="598" cy="285" rx="6" ry="14" fill="#a0c8e0" opacity=".25"><animate attributeName="opacity" values=".1;.4;.1" dur="2s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="600" cy="246" rx="18" ry="32" fill="url(#exhaust)" opacity=".9"/>
+    <ellipse cx="600" cy="262" rx="10" ry="22" fill="url(#plume)" opacity=".55"/>
+    <ellipse cx="598" cy="279" rx="6" ry="14" fill="#a0c8e0" opacity=".25"><animate attributeName="opacity" values=".1;.4;.1" dur="2s" repeatCount="indefinite"/></ellipse>
     <path d="M595 278 Q590 295 585 305 Q598 290 605 305 Q602 292 595 278" fill="#c8d8e8" opacity=".2"><animate attributeName="opacity" values=".1;.35;.15;.3;.1" dur="3s" repeatCount="indefinite"/></path>
     <path d="M608 275 Q615 292 620 302 Q612 288 600 300" fill="#e0eef8" opacity=".15"><animate attributeName="d" values="M608 275 Q615 292 620 302 Q612 288 600 300;M608 273 Q618 295 625 308 Q610 290 598 305;M608 275 Q615 292 620 302 Q612 288 600 300" dur="4s" repeatCount="indefinite"/></path>
   </g>
@@ -112,44 +114,35 @@ def monument_blueprints() -> dict[str, str]:
 def build_cities() -> None:
     bg = webp_data_uri(RASTER / "cities.webp")
     panels = [
-        ("sydney", 8, 52, 230, 196, "city-sydney.webp", 0),
-        ("delhi", 243, 52, 235, 196, "city-delhi.webp", 4),
-        ("munich", 483, 52, 229, 196, "city-munich.webp", 8),
+        ("sydney", 10, 56, 228, 196, 0),
+        ("delhi", 245, 56, 231, 196, 4),
+        ("munich", 486, 56, 226, 196, 8),
     ]
     bp = monument_blueprints()
-    w, h = 720, 283
+    w, h = 720, 286
     dur = 12
+    panel_clips = []
     panel_groups = []
-    for name, px, py, pw, ph, raster, begin in panels:
-        uri = webp_data_uri(RASTER / raster)
+    for name, px, py, pw, ph, begin in panels:
+        panel_clips.append(f'<clipPath id="panel-frame-{name}"><rect width="{pw}" height="{ph}" rx="4"/></clipPath>')
         panel_groups.append(f'''
   <g transform="translate({px},{py})">
-    <defs>
-      <clipPath id="reveal-{name}">
-        <rect y="0" height="{ph}">
-          <animate attributeName="width" values="0;0;{pw};{pw};0" keyTimes="0;0.28;0.52;0.72;1" dur="{dur}s" begin="{begin}s" repeatCount="indefinite"/>
-          <animate attributeName="x" values="0;0;0;0;0" dur="{dur}s" begin="{begin}s" repeatCount="indefinite"/>
-        </rect>
-      </clipPath>
-    </defs>
-    <rect width="{pw}" height="{ph}" rx="6" fill="#0c1820"/>
-    <image href="{uri}" width="{pw}" height="{ph}" opacity="0.38" preserveAspectRatio="xMidYMid slice"/>
-    <image href="{uri}" width="{pw}" height="{ph}" clip-path="url(#reveal-{name})" preserveAspectRatio="xMidYMid slice"/>
-    <rect width="{pw}" height="{ph}" rx="6" fill="#051018">
-      <animate attributeName="opacity" values="0.52;0.52;0;0;0.5" keyTimes="0;0.28;0.48;0.72;1" dur="{dur}s" begin="{begin}s" repeatCount="indefinite"/>
-    </rect>
-    <g class="bp-layer" stroke="#4de8ff" fill="none" stroke-width="1.25" transform="translate(0,10)">
-      {bp[name]}
-      <animate attributeName="opacity" values="1;1;0.15;0;1" keyTimes="0;0.28;0.5;0.72;1" dur="{dur}s" begin="{begin}s" repeatCount="indefinite"/>
+    <g clip-path="url(#panel-frame-{name})">
+      <rect width="{pw}" height="{ph}" fill="#051018" opacity="0.45">
+        <animate attributeName="opacity" values="0.42;0.42;0;0;0.4" keyTimes="0;0.28;0.48;0.72;1" dur="{dur}s" begin="{begin}s" repeatCount="indefinite"/>
+      </rect>
+      <g stroke="#4de8ff" fill="none" stroke-width="1.2" transform="translate(0,12)">
+        {bp[name]}
+        <animate attributeName="opacity" values="1;1;0.2;0;1" keyTimes="0;0.28;0.5;0.72;1" dur="{dur}s" begin="{begin}s" repeatCount="indefinite"/>
+      </g>
+      <rect y="0" width="14" height="{ph}" fill="url(#laserGrad)" opacity="0.85">
+        <animate attributeName="x" values="-16;-16;{pw};{pw};-16" keyTimes="0;0.3;0.55;0.72;1" dur="{dur}s" begin="{begin}s" repeatCount="indefinite"/>
+      </rect>
     </g>
-    <rect y="0" width="16" height="{ph}" fill="url(#laserGrad)">
-      <animateTransform attributeName="transform" type="translate" values="-20 0; -20 0; {pw + 4} 0; {pw + 4} 0; -20 0" keyTimes="0;0.3;0.55;0.72;1" dur="{dur}s" begin="{begin}s" repeatCount="indefinite"/>
-    </rect>
-    <rect width="{pw}" height="{ph}" rx="6" fill="none" stroke="#2a4858" stroke-width="1"/>
   </g>''')
 
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-labelledby="citiesTitle">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="citiesTitle">
   <title id="citiesTitle">Sydney, Delhi, Munich</title>
   <defs>
     <linearGradient id="laserGrad" x1="0" y1="0" x2="1" y2="0">
@@ -158,6 +151,7 @@ def build_cities() -> None:
       <stop offset="55%" stop-color="#66ffff" stop-opacity="1"/>
       <stop offset="100%" stop-color="#00ffff" stop-opacity="0"/>
     </linearGradient>
+    {''.join(panel_clips)}
     <style>
       @keyframes arc-dash {{ to {{ stroke-dashoffset: -80; }} }}
       .arc {{ stroke-dasharray: 8 14; animation: arc-dash 6s linear infinite; }}
@@ -167,15 +161,18 @@ def build_cities() -> None:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <path class="motion arc" d="M 230 150 Q 360 120 490 150" fill="none" stroke="#3cc8b8" stroke-width="1.2" opacity="0.7"/>
+  <rect x="0" y="0" width="{w}" height="48" fill="#060a0e" opacity="0.55"/>
+  <text x="360" y="31" text-anchor="middle" fill="#c8e8f0" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.28em">SYDNEY · DELHI · MUNICH</text>
+  <path class="motion arc" d="M 228 172 Q 360 142 492 172" fill="none" stroke="#3cc8b8" stroke-width="1.2" opacity="0.55"/>
   {''.join(panel_groups)}
+  <text x="360" y="278" text-anchor="middle" fill="#6a98a8" font-size="8.5" letter-spacing="0.16em">engineered live</text>
 </svg>"""
     write(ASSETS / "cities.svg", svg)
 
 
 def build_planets() -> None:
     bg = webp_data_uri(RASTER / "planets.webp")
-    w, h = 720, 220
+    w, h = 720, 202
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-labelledby="planetsTitle">
   <title id="planetsTitle">Yuga, Cyra, Research</title>
@@ -206,7 +203,7 @@ def build_planets() -> None:
 
 def build_orbital() -> None:
     bg = webp_data_uri(RASTER / "orbital.webp")
-    w, h = 720, 272
+    w, h = 720, 274
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-labelledby="orbitalTitle">
   <title id="orbitalTitle">Orbital garden</title>
@@ -235,6 +232,7 @@ def build_orbital() -> None:
     <circle cx="520" cy="95" r="1.2"/><circle cx="545" cy="88" r="1" style="animation-delay:.6s"/><circle cx="568" cy="102" r=".9" style="animation-delay:1.1s"/>
     <circle cx="595" cy="92" r="1.1" style="animation-delay:1.4s"/>
   </g>
+  <text x="360" y="262" text-anchor="middle" fill="#a8d0c0" font-family="system-ui,sans-serif" font-size="9" letter-spacing="0.1em">BUILDING WITH INTENTION. FOR A FUTURE THAT GROWS.</text>
 </svg>"""
     write(ASSETS / "orbital-garden.svg", svg)
 
