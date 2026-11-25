@@ -101,8 +101,6 @@ def main() -> None:
     out = ET.Element(
         svg_tag("svg"),
         {
-            "xmlns": "http://www.w3.org/2000/svg",
-            "xmlns:xlink": "http://www.w3.org/1999/xlink",
             "viewBox": f"0 0 720 {total_h:.0f}",
             "width": "720",
             "height": str(int(total_h)),
@@ -124,8 +122,18 @@ def main() -> None:
 
     out_path = ASSETS / "profile.svg"
     ET.indent(out, space="  ")
-    xml = ET.tostring(out, encoding="unicode", xml_declaration=False)
-    out_path.write_text('<?xml version="1.0" encoding="UTF-8"?>\n' + xml, encoding="utf-8")
+    raw = ET.tostring(out, encoding="unicode", xml_declaration=False)
+    raw = re.sub(r'\sxmlns(?::xlink)?="[^"]+"', "", raw, count=0)
+    raw = re.sub(
+        r"<svg\s+",
+        '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ',
+        raw,
+        count=1,
+    )
+    out_path.write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n' + raw,
+        encoding="utf-8",
+    )
     kb = out_path.stat().st_size / 1024
     print(f"Wrote {out_path} ({kb:.1f} KB, height={int(total_h)})")
     if kb > 1500:
