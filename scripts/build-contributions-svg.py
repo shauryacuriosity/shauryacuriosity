@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import urllib.error
 import urllib.request
 import sys
 from pathlib import Path
@@ -23,6 +25,16 @@ WEEKDAYS = [(0, "Mon"), (2, "Wed"), (4, "Fri")]
 TREE_H = 120
 FLOOR_TOP = 112
 
+LEVEL_ENUM = {
+    "NONE": 0,
+    "FIRST_QUARTILE": 1,
+    "SECOND_QUARTILE": 2,
+    "THIRD_QUARTILE": 3,
+    "FOURTH_QUARTILE": 4,
+}
+
+QUARTILE_COUNTS = [0, 1, 4, 9, 16]
+
 QUERY = """
 query($login: String!) {
   user(login: $login) {
@@ -30,7 +42,10 @@ query($login: String!) {
       contributionCalendar {
         totalContributions
         weeks {
-          contributionDays { contributionCount }
+          contributionDays {
+            contributionCount
+            contributionLevel
+          }
         }
       }
     }
@@ -38,11 +53,25 @@ query($login: String!) {
 }
 """
 
+CONTRIBUTIONS_HTML = "https://github.com/users/{login}/contributions"
 
-def fetch_calendar():
+
+def _normalize_day(day: dict) -> dict:
+    level = day.get("contributionLevel")
+    if isinstance(level, str):
+        day = {**day, "contributionLevel": LEVEL_ENUM.get(level, 0)}
+    elif level is not None:
+        day = {**day, "contributionLevel": int(level)}
+    return day
+
+
+def fetch_calendar() -> dict:
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
     body = json.dumps({"query": QUERY, "variables": {"login": LOGIN}}).encode()
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "shauryacuriosity-profile-build",
+    }
     if token:
         headers["Authorization"] = f"bearer {token}"
     req = urllib.request.Request("https://api.github.com/graphql", data=body, headers=headers)
@@ -50,22 +79,81 @@ def fetch_calendar():
         data = json.loads(res.read().decode())
     if data.get("errors"):
         raise RuntimeError(data["errors"])
-    return data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
+    cal = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
+    weeks = []
+    for week in cal["weeks"]:
+        days = [_normalize_day(d) for d in week["contributionDays"]]
+        weeks.append({"contributionDays": days[:7]})
+    cal["weeks"] = weeks
+    return cal
 
 
-def fallback_calendar():
-    return {
-        "totalContributions": 0,
-        "weeks": [
-            {
-                "contributionDays": [
-                    {"contributionCount": (c * 3) % 11 if r % 2 == 0 else 0}
-                    for r in range(7)
-                ]
-            }
-            for c in range(53)
-        ],
-    }
+def fetch_calendar_from_html() -> dict:
+    url = CONTRIBUTIONS_HTML.format(login=LOGIN)
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "shauryacuriosity-profile-build"},
+    )
+    with urllib.request.urlopen(req, timeout=60) as res:
+        html = res.read().decode()
+
+    total = 0
+    total_m = re.search(
+        r'id="js-contribution-activity-description"[^>]*>\s*([\d,]+)',
+        html,
+        re.S,
+    )
+    if total_m:
+        total = int(total_m.group(1).replace(",", ""))
+
+    matrix: list[list[int | None]] = [[None] * 53 for _ in range(7)]
+    td_re = re.compile(r"<td[^>]*ContributionCalendar-day[^>]*>", re.I)
+    id_re = re.compile(r'id="contribution-day-component-(\d+)-(\d+)"')
+    level_re = re.compile(r'data-level="(\d)"')
+    max_week = -1
+    for td in td_re.finditer(html):
+        tag = td.group(0)
+        id_m = id_re.search(tag)
+        lv_m = level_re.search(tag)
+        if not id_m or not lv_m:
+            continue
+        row, col, lv = int(id_m.group(1)), int(id_m.group(2)), int(lv_m.group(1))
+        if col >= len(matrix[row]):
+            for r in range(7):
+                matrix[r].extend([None] * (col + 1 - len(matrix[r])))
+        matrix[row][col] = lv
+        max_week = max(max_week, col)
+    if max_week < 0:
+        raise RuntimeError("no contribution grid cells found in HTML")
+
+    num_weeks = max_week + 1
+    weeks = []
+    for c in range(num_weeks):
+        days = []
+        for r in range(7):
+            lv = matrix[r][c] if matrix[r][c] is not None else 0
+            days.append(
+                {
+                    "contributionCount": QUARTILE_COUNTS[lv],
+                    "contributionLevel": lv,
+                }
+            )
+        weeks.append({"contributionDays": days})
+
+    return {"totalContributions": total, "weeks": weeks}
+
+
+def load_calendar() -> tuple[dict, str]:
+    errors: list[str] = []
+    try:
+        return fetch_calendar(), "graphql"
+    except Exception as e:
+        errors.append(f"graphql: {e}")
+    try:
+        return fetch_calendar_from_html(), "html"
+    except Exception as e:
+        errors.append(f"html: {e}")
+    raise RuntimeError("; ".join(errors))
 
 
 def build(calendar: dict) -> str:
@@ -89,11 +177,15 @@ def build(calendar: dict) -> str:
         for r, day in enumerate(week["contributionDays"]):
             if r >= 7:
                 continue
-            count = day["contributionCount"]
+            count = day.get("contributionCount", 0)
+            level = day.get("contributionLevel")
+            if level is not None:
+                lv = min(4, max(0, int(level)))
+            else:
+                lv = min(4, max(0, (0 if count == 0 else 1 + min(3, count // 4))))
             x = ox + c * (cell + gap)
             y = oy + r * row_h
-            lv = min(4, max(0, (0 if count == 0 else 1 + min(3, count // 4))))
-            fill = LEVEL_FILL[lv if count else 0]
+            fill = LEVEL_FILL[lv]
             delay = (c * 7 + r) % 40 * 0.07
             cells.append(
                 f'<rect x="{x:.1f}" y="{y:.1f}" width="{cell}" height="{cell}" rx="2.4" fill="{fill}"'
@@ -156,13 +248,12 @@ def build(calendar: dict) -> str:
 
 
 def main() -> None:
-    try:
-        cal = fetch_calendar()
-    except Exception as e:
-        print("Fallback calendar:", e)
-        cal = fallback_calendar()
+    cal, source = load_calendar()
     OUT.write_text(build(cal), encoding="utf-8")
-    print(f"Wrote {OUT} ({OUT.stat().st_size // 1024} KB)")
+    print(
+        f"Wrote {OUT} ({OUT.stat().st_size // 1024} KB) "
+        f"source={source} total={cal['totalContributions']} weeks={len(cal['weeks'])}"
+    )
 
 
 if __name__ == "__main__":
