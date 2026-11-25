@@ -18,6 +18,7 @@ LOGIN = os.environ.get("GITHUB_USER", "shauryacuriosity")
 
 LEVEL_FILL = ["#0c1814", "#1d5c34", "#289450", "#3ed878", "#6cffaa"]
 MONTHS = ["Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"]
+WEEKDAYS = [(0, "Mon"), (2, "Wed"), (4, "Fri")]
 
 QUERY = """
 query($login: String!) {
@@ -69,56 +70,91 @@ def build(calendar: dict) -> str:
     w, h = 720, 234
     weeks = calendar["weeks"]
     cols = len(weeks)
-    cell, gap = 9, 3
+    cell, gap = 8, 2
+    row_h = cell + gap
     grid_w = cols * (cell + gap) - gap
     ox = (w - grid_w) / 2
-    grid_top = 124
-    oy = 136
-    row_h = cell + gap
-    grid_bottom = oy + 7 * row_h - gap
-    label_y = grid_top + 14
+    grid_h = 7 * row_h - gap
+    oy = 146
+    month_y = 130
+    solid_floor_y = 142
+    fade_top_y = 118
+    fade_h = solid_floor_y - fade_top_y
+    grid_bottom = oy + grid_h
+    bottom_margin = h - grid_bottom
 
     cells = []
     for c, week in enumerate(weeks):
         for r, day in enumerate(week["contributionDays"]):
+            if r >= 7:
+                continue
             count = day["contributionCount"]
             x = ox + c * (cell + gap)
             y = oy + r * row_h
-            if r >= 7:
-                continue
             lv = min(4, max(0, (0 if count == 0 else 1 + min(3, count // 4))))
             fill = LEVEL_FILL[lv if count else 0]
             delay = (c * 7 + r) % 40 * 0.07
             cells.append(
-                f'<rect x="{x:.1f}" y="{y:.1f}" width="{cell}" height="{cell}" rx="3.2" fill="{fill}"'
+                f'<rect x="{x:.1f}" y="{y:.1f}" width="{cell}" height="{cell}" rx="2.4" fill="{fill}"'
                 f' filter="url(#cellGlow)"><animate attributeName="opacity" values="0.82;1;0.88" dur="3.5s"'
                 f' begin="{delay:.2f}s" repeatCount="indefinite"/></rect>'
             )
 
     month_xs = [ox + i * (grid_w / (len(MONTHS) - 1)) for i in range(len(MONTHS))]
     month_labels = "".join(
-        f'<text x="{x:.1f}" y="{label_y}" text-anchor="middle" fill="#8aaa9a" font-family="system-ui,sans-serif" font-size="7.5" letter-spacing="0.04em">{m}</text>'
+        f'<text x="{x:.1f}" y="{month_y}" text-anchor="middle" fill="#7a9488" font-family="system-ui,sans-serif" font-size="9" letter-spacing="0.03em">{m}</text>'
         for m, x in zip(MONTHS, month_xs)
     )
+
+    weekday_labels = "".join(
+        f'<text x="{ox - 10:.1f}" y="{oy + r * row_h + cell - 2:.1f}" text-anchor="end" fill="#6a8278" font-family="system-ui,sans-serif" font-size="8">{label}</text>'
+        for r, label in WEEKDAYS
+    )
+
+    clip_y = fade_top_y
+    clip_h = grid_bottom - clip_y + max(bottom_margin, 12)
 
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="ct cd">
   <title id="ct">Contribution forest</title>
   <desc id="cd">{calendar["totalContributions"]} contributions in the last year.</desc>
   <defs>
-    <clipPath id="gridZone"><rect x="0" y="{grid_top}" width="{w}" height="{grid_bottom - grid_top + 14}"/></clipPath>
+    <linearGradient id="forestFloor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a1210" stop-opacity="0"/>
+      <stop offset="55%" stop-color="#0a1210" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#0a1210" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#b8ffd8" stop-opacity="0"/>
+      <stop offset="42%" stop-color="#d8ffe8" stop-opacity="0.12"/>
+      <stop offset="58%" stop-color="#d8ffe8" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#b8ffd8" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="gridZone"><rect x="0" y="{clip_y}" width="{w}" height="{clip_h}"/></clipPath>
     <filter id="cellGlow" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="0.8" result="b"/>
+      <feGaussianBlur stdDeviation="0.7" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
+    <filter id="waveBlur" x="-50%" y="-20%" width="200%" height="140%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
     <style>
-      @media (prefers-reduced-motion: reduce) {{ rect animate {{ display: none; }} }}
+      @media (prefers-reduced-motion: reduce) {{ .light-wave, rect animate, animateTransform {{ display: none; }} }}
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <rect x="0" y="104" width="{w}" height="{grid_bottom - 100}" fill="#0a1210" opacity="1"/>
+  <rect x="0" y="{solid_floor_y}" width="{w}" height="{h - solid_floor_y}" fill="#0a1210"/>
+  <rect x="0" y="{fade_top_y}" width="{w}" height="{fade_h}" fill="url(#forestFloor)"/>
   {month_labels}
-  <g clip-path="url(#gridZone)">{''.join(cells)}</g>
+  {weekday_labels}
+  <g clip-path="url(#gridZone)">
+    {''.join(cells)}
+    <g class="light-wave" clip-path="url(#gridZone)" opacity="0.55" filter="url(#waveBlur)">
+      <rect x="-240" y="{oy}" width="320" height="{grid_h}" fill="url(#waveGrad)">
+        <animateTransform attributeName="transform" type="translate" values="-720 0;720 0" dur="14s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+  </g>
 </svg>"""
 
 

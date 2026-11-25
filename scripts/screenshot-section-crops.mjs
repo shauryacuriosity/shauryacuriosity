@@ -41,6 +41,22 @@ for (const c of [
     path: join(out, `live-${c.name}.png`),
     fullPage: true,
   });
+  if (c.name === "desktop-dark") {
+    const img = page.locator('img[src*="profile.svg"]').first();
+  const box = await img.boundingBox();
+    if (box) {
+      const scale = box.width / 720;
+      await page.screenshot({
+        path: join(out, "crop-2x-contributions-live.png"),
+        clip: {
+          x: box.x,
+          y: box.y + 486 * scale,
+          width: box.width,
+          height: 234 * scale,
+        },
+      });
+    }
+  }
   await ctx.close();
 }
 
