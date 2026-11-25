@@ -109,7 +109,6 @@ def build(calendar: dict) -> str:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <text x="360" y="26" text-anchor="middle" fill="#b8e0c8" font-family="system-ui,sans-serif" font-size="10" letter-spacing="0.32em">CONTRIBUTIONS // FOREST</text>
   <g opacity="0.92">{''.join(cells)}</g>
   <rect class="sweep-bar" x="0" y="{oy - 6}" width="720" height="80" fill="url(#sweep)"/>
 </svg>"""

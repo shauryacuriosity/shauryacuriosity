@@ -30,7 +30,7 @@ jobs:
           if git diff --quiet assets/; then
             echo "No changes"
           else
-            git add assets/*.svg
+            git add assets/*.svg assets/profile.svg
             git commit -m "chore: rebuild profile SVG assets from GitHub API"
             git push
           fi

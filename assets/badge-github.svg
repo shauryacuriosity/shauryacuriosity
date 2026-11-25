@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 36" width="220" height="36" role="img" aria-label="GitHub profile">
+  <rect width="220" height="36" rx="18" fill="#0d1a22" stroke="#3a6878" stroke-width="1"/>
+  <circle cx="28" cy="18" r="10" fill="#1a2830" stroke="#5cc8b8" stroke-width="1"/>
+  <path fill="#c8e8f0" d="M28 12.5c-2.8 0-3.2 1.4-3.2 1.4s3.8-.6 5.8.8c-2.5 1.5-6.5 4.6-6.2 8.4 2.8-2 6.5-2.2 6.5-2.2s1 .6 2.8.6 3.6-.4 5.2-1.4c0 0-5.8 3.2-6.5 6.8 5.2-3 6.5-7.5 4.2-10.2 1.8-.2 3.5.2 5 1.2-.4-2.2-2.2-4-5.2-4z" transform="translate(-4,0) scale(.55)"/>
+  <text x="112" y="22" text-anchor="middle" fill="#a8d0dc" font-family="system-ui,sans-serif" font-size="12" letter-spacing="0.08em">github.com/shauryacuriosity</text>
+</svg>

@@ -55,7 +55,7 @@ def build_hero() -> None:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <!-- Crisp title over painted art -->
+  <rect x="0" y="0" width="{w}" height="78" fill="#0a1420" opacity="0.42"/>
   <text x="360" y="41" text-anchor="middle" fill="#e8f6f4" font-family="system-ui,-apple-system,sans-serif" font-size="25" font-weight="300" letter-spacing="0.24em" paint-order="stroke" stroke="#0a1820" stroke-width="3">SHAURYA KANSAL</text>
   <text x="360" y="64" text-anchor="middle" fill="#c0dce4" font-family="system-ui,sans-serif" font-size="11.5" letter-spacing="0.06em" paint-order="stroke" stroke="#0a1820" stroke-width="2">Founder, SCYCLE AI // building Yuga</text>
   <rect class="motion aurora-band" x="-40" y="88" width="800" height="50" fill="url(#aurora)"/>
@@ -167,10 +167,8 @@ def build_cities() -> None:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <text x="360" y="28" text-anchor="middle" fill="#c8e8f0" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.28em">SYDNEY · DELHI · MUNICH</text>
   <path class="motion arc" d="M 230 150 Q 360 120 490 150" fill="none" stroke="#3cc8b8" stroke-width="1.2" opacity="0.7"/>
   {''.join(panel_groups)}
-  <text x="360" y="272" text-anchor="middle" fill="#6a98a8" font-size="9" letter-spacing="0.18em">engineered live</text>
 </svg>"""
     write(ASSETS / "cities.svg", svg)
 
@@ -202,9 +200,6 @@ def build_planets() -> None:
     <g transform="translate(120,118)"><ellipse class="ring" cx="0" cy="0" rx="54" ry="15" fill="none" stroke="#5ce8c8" stroke-width="1" opacity=".55"/><circle class="moon motion" r="3" fill="#c0fff0"/></g>
     <g transform="translate(600,122)"><ellipse class="ring ring2" cx="0" cy="0" rx="50" ry="13" fill="none" stroke="#8cff70" stroke-width="1" opacity=".5"/><circle class="moon motion" r="2.5" fill="#d0ffb8" style="animation-delay:-2s"/></g>
   </g>
-  <text x="120" y="44" text-anchor="middle" fill="#9cf0dc" font-family="system-ui,sans-serif" font-size="11" letter-spacing="0.22em" class="motion star">YUGA</text>
-  <text x="360" y="44" text-anchor="middle" fill="#f0b8e0" font-size="11" letter-spacing="0.22em" class="motion star" style="animation-delay:.4s">CYRA</text>
-  <text x="600" y="44" text-anchor="middle" fill="#b0f090" font-size="11" letter-spacing="0.22em" class="motion star" style="animation-delay:.8s">RESEARCH</text>
 </svg>"""
     write(ASSETS / "planets.svg", svg)
 
@@ -240,7 +235,6 @@ def build_orbital() -> None:
     <circle cx="520" cy="95" r="1.2"/><circle cx="545" cy="88" r="1" style="animation-delay:.6s"/><circle cx="568" cy="102" r=".9" style="animation-delay:1.1s"/>
     <circle cx="595" cy="92" r="1.1" style="animation-delay:1.4s"/>
   </g>
-  <text x="360" y="256" text-anchor="middle" fill="#b0d8c8" font-family="system-ui,sans-serif" font-size="9.5" letter-spacing="0.1em">BUILDING WITH INTENTION. FOR A FUTURE THAT GROWS.</text>
 </svg>"""
     write(ASSETS / "orbital-garden.svg", svg)
 

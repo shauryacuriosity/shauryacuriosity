@@ -6,3 +6,4 @@ if [[ -f assets/source/concept_v7b.png ]]; then
 fi
 python3 scripts/build-static-svgs.py
 python3 scripts/build-contributions-svg.py
+python3 scripts/merge-profile-svg.py
