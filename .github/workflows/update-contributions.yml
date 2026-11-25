@@ -1,0 +1,37 @@
+name: Update contribution forest
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Generate contributions SVG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USER: shauryacuriosity
+        run: node scripts/generate-contributions.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet assets/contributions-forest.svg; then
+            echo "No changes"
+          else
+            git add assets/contributions-forest.svg
+            git commit -m "chore: refresh contribution forest from GitHub API"
+            git push
+          fi

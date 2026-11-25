@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img" aria-labelledby="gardenTitle">
+  <title id="gardenTitle">Orbital garden</title>
+  <defs>
+    <linearGradient id="spaceBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#060a14"/>
+      <stop offset="60%" stop-color="#0a1420"/>
+      <stop offset="100%" stop-color="#142838"/>
+    </linearGradient>
+    <radialGradient id="planetGlowBottom" cx="50%" cy="100%">
+      <stop offset="0%" stop-color="#2a8868"/>
+      <stop offset="40%" stop-color="#1a5848"/>
+      <stop offset="100%" stop-color="#0a1820"/>
+    </radialGradient>
+    <linearGradient id="shipTrail" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#40c8ff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#80f0ff" stop-opacity="0.9"/>
+    </linearGradient>
+    <style>
+      @media (prefers-reduced-motion: reduce) {
+        .drift, .garden-spin, .twinkle { animation: none !important; }
+      }
+      @keyframes shipDrift {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(12px, -8px); }
+      }
+      @keyframes gardenRotate {
+        from { transform: rotate(-8deg); }
+        to { transform: rotate(8deg); }
+      }
+      @keyframes twinkle {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.9; }
+      }
+      .drift { animation: shipDrift 10s ease-in-out infinite; }
+      .garden-spin { animation: gardenRotate 20s ease-in-out infinite alternate; }
+      .twinkle { animation: twinkle 3s ease-in-out infinite; }
+    </style>
+  </defs>
+  <rect width="720" height="260" fill="url(#spaceBg)"/>
+
+  <!-- Stars -->
+  <g fill="#c0e0ff" class="twinkle motion">
+    <circle cx="80" cy="40" r="1"/><circle cx="200" cy="25" r="1.2"/><circle cx="650" cy="35" r="1"/>
+    <circle cx="500" cy="55" r="0.8"/><circle cx="320" cy="30" r="1"/><circle cx="700" cy="80" r="0.9"/>
+  </g>
+
+  <!-- Planet horizon -->
+  <ellipse cx="360" cy="320" rx="420" ry="180" fill="url(#planetGlowBottom)"/>
+  <path d="M 0 220 Q 200 195 360 205 T 720 215 L 720 260 L 0 260 Z" fill="#1a6860" opacity="0.35"/>
+
+  <!-- Orbital torus habitat -->
+  <g class="garden-spin motion" transform="translate(500, 125)">
+    <ellipse cx="0" cy="0" rx="95" ry="38" fill="none" stroke="#7ad8a0" stroke-width="8" opacity="0.35"/>
+    <ellipse cx="0" cy="0" rx="78" ry="28" fill="#0a2818" stroke="#4ac878" stroke-width="2"/>
+    <g fill="#2a8850" opacity="0.85">
+      <path d="M -40 -8 L -35 -22 L -28 -8 Z"/><path d="M -15 -5 L -10 -20 L -3 -5 Z"/>
+      <path d="M 10 -6 L 16 -24 L 22 -6 Z"/><path d="M 35 -8 L 42 -26 L 48 -8 Z"/>
+      <path d="M 55 -4 L 60 -18 L 65 -4 Z"/>
+    </g>
+    <ellipse cx="0" cy="-2" rx="72" ry="22" fill="none" stroke="#90ffb0" stroke-width="1" opacity="0.3"/>
+  </g>
+
+  <!-- Spacecraft -->
+  <g class="drift motion" transform="translate(140, 155)">
+    <path d="M 0 0 L 80 -5 L 120 0 L 80 5 Z" fill="#e0e8f0"/>
+    <path d="M 80 -8 L 95 -25 L 110 -8" fill="#c0d0e0"/>
+    <path d="M 80 8 L 95 25 L 110 8" fill="#c0d0e0"/>
+    <path d="M 120 0 L 200 0" stroke="url(#shipTrail)" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+    <circle cx="125" cy="0" r="8" fill="#60d8ff" opacity="0.6" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  <filter id="glow"><feGaussianBlur stdDeviation="2"/></filter>
+
+  <!-- Footer -->
+  <text x="360" y="238" text-anchor="middle" fill="#88b8a8" font-family="system-ui,sans-serif" font-size="10" letter-spacing="0.12em">BUILDING WITH INTENTION. FOR A FUTURE THAT GROWS.</text>
+  <text x="48" y="238" fill="#4a8868" font-size="12">🌿</text>
+  <circle cx="672" cy="233" r="4" fill="none" stroke="#5a9888" stroke-width="1"/>
+</svg>
