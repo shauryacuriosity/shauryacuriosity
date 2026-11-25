@@ -1,1 +1,1 @@
-<p align="center"><img src="assets/profile.svg?v=c2bf3e2" width="720" border="0" alt="Shaurya Kansal — Founder, SCYCLE AI, building Yuga"></p>
+<p align="center"><img src="assets/profile.svg?v=d815cfe" width="720" border="0" alt="Shaurya Kansal — Founder, SCYCLE AI, building Yuga"></p>

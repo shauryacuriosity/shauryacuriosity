@@ -73,13 +73,14 @@ def build(calendar: dict) -> str:
     cell, gap = 8, 2
     row_h = cell + gap
     grid_w = cols * (cell + gap) - gap
-    ox = (w - grid_w) / 2
+    label_gutter = 18
+    ox = label_gutter + (w - label_gutter - grid_w) / 2
     grid_h = 7 * row_h - gap
-    floor_top = 124
-    feather_h = 28
+    floor_top = 120
+    feather_h = 34
     solid_floor_y = floor_top + feather_h
-    month_y = solid_floor_y - 8
-    oy = solid_floor_y + 8
+    month_y = solid_floor_y - 6
+    oy = solid_floor_y + 9
     grid_bottom = oy + grid_h
     bottom_margin = h - grid_bottom
 
@@ -107,7 +108,7 @@ def build(calendar: dict) -> str:
     )
 
     weekday_labels = "".join(
-        f'<text x="{ox - 10:.1f}" y="{oy + r * row_h + cell - 2:.1f}" text-anchor="end" fill="#6a8278" font-family="system-ui,sans-serif" font-size="8">{label}</text>'
+        f'<text x="{ox - 12:.1f}" y="{oy + r * row_h + cell - 2:.1f}" text-anchor="end" fill="#6a8278" font-family="system-ui,sans-serif" font-size="8">{label}</text>'
         for r, label in WEEKDAYS
     )
 
@@ -121,7 +122,8 @@ def build(calendar: dict) -> str:
   <defs>
     <linearGradient id="forestFloor" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#0a1210" stop-opacity="0"/>
-      <stop offset="40%" stop-color="#0a1210" stop-opacity="0.55"/>
+      <stop offset="35%" stop-color="#0a1210" stop-opacity="0.45"/>
+      <stop offset="70%" stop-color="#0a1210" stop-opacity="0.88"/>
       <stop offset="100%" stop-color="#0a1210" stop-opacity="1"/>
     </linearGradient>
     <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
