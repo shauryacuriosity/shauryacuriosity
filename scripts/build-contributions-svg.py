@@ -75,13 +75,12 @@ def build(calendar: dict) -> str:
     grid_w = cols * (cell + gap) - gap
     ox = (w - grid_w) / 2
     grid_h = 7 * row_h - gap
-    oy = 146
-    month_y = 130
-    solid_floor_y = 142
-    fade_top_y = 118
-    fade_h = solid_floor_y - fade_top_y
+    floor_top = 122
+    month_y = 131
+    oy = 145
     grid_bottom = oy + grid_h
     bottom_margin = h - grid_bottom
+    floor_h = h - floor_top
 
     cells = []
     for c, week in enumerate(weeks):
@@ -111,17 +110,18 @@ def build(calendar: dict) -> str:
         for r, label in WEEKDAYS
     )
 
-    clip_y = fade_top_y
-    clip_h = grid_bottom - clip_y + max(bottom_margin, 12)
+    clip_y = floor_top
+    clip_h = grid_bottom - clip_y + max(bottom_margin, 10)
 
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="ct cd">
   <title id="ct">Contribution forest</title>
   <desc id="cd">{calendar["totalContributions"]} contributions in the last year.</desc>
   <defs>
-    <linearGradient id="forestFloor" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="forestFloor" gradientUnits="userSpaceOnUse" x1="0" y1="{floor_top}" x2="0" y2="{floor_top + floor_h}">
       <stop offset="0%" stop-color="#0a1210" stop-opacity="0"/>
-      <stop offset="55%" stop-color="#0a1210" stop-opacity="0.88"/>
+      <stop offset="22%" stop-color="#0a1210" stop-opacity="0.72"/>
+      <stop offset="42%" stop-color="#0a1210" stop-opacity="0.96"/>
       <stop offset="100%" stop-color="#0a1210" stop-opacity="1"/>
     </linearGradient>
     <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
@@ -143,8 +143,7 @@ def build(calendar: dict) -> str:
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <rect x="0" y="{solid_floor_y}" width="{w}" height="{h - solid_floor_y}" fill="#0a1210"/>
-  <rect x="0" y="{fade_top_y}" width="{w}" height="{fade_h}" fill="url(#forestFloor)"/>
+  <rect x="0" y="{floor_top}" width="{w}" height="{floor_h}" fill="url(#forestFloor)"/>
   {month_labels}
   {weekday_labels}
   <g clip-path="url(#gridZone)">
