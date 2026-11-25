@@ -1,3 +1,5 @@
 node_modules/
 package-lock.json
 package.json
+scripts/__pycache__/
+assets/raster/*.jpg

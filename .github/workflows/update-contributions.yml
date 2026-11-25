@@ -14,24 +14,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
+      - name: Install Pillow
+        run: pip install Pillow --quiet
 
-      - name: Generate contributions SVG
+      - name: Build profile SVG assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_USER: shauryacuriosity
-        run: node scripts/generate-contributions.mjs
+        run: bash scripts/build-all.sh
 
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet assets/contributions-forest.svg; then
+          if git diff --quiet assets/; then
             echo "No changes"
           else
-            git add assets/contributions-forest.svg
-            git commit -m "chore: refresh contribution forest from GitHub API"
+            git add assets/*.svg
+            git commit -m "chore: rebuild profile SVG assets from GitHub API"
             git push
           fi
