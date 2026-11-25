@@ -10,9 +10,9 @@ const root = join(import.meta.dirname, "..");
 const b64 = readFileSync(join(root, "assets/profile.svg")).toString("base64");
 const sections = [
   { name: "hero", y: 0, h: 486 },
-  { name: "contributions", y: 486, h: 234 },
-  { name: "cities", y: 720, h: 180 },
-  { name: "footer", y: 1040, h: 240 },
+  { name: "contributions", y: 486, h: 258 },
+  { name: "cities", y: 744, h: 180 },
+  { name: "footer", y: 1064, h: 240 },
 ];
 
 const browser = await chromium.launch({ deviceScaleFactor: 2 });
@@ -34,7 +34,7 @@ for (const c of [
   await page.reload({ waitUntil: "networkidle" });
   await page.waitForFunction(() => {
     const img = document.querySelector('img[src*="profile.svg"]');
-    return img && img.naturalHeight >= 1280;
+    return img && img.naturalHeight >= 1304;
   }, { timeout: 60000 }).catch(() => {});
   await page.waitForTimeout(2000);
   await page.screenshot({
@@ -52,7 +52,7 @@ for (const c of [
           x: box.x,
           y: box.y + 486 * scale,
           width: box.width,
-          height: 234 * scale,
+          height: 258 * scale,
         },
       });
     }
@@ -60,7 +60,7 @@ for (const c of [
   await ctx.close();
 }
 
-const page = await browser.newPage({ viewport: { width: 720, height: 1280 } });
+const page = await browser.newPage({ viewport: { width: 720, height: 1304 } });
 await page.setContent(
   `<img src="data:image/svg+xml;base64,${b64}" width="720" style="display:block"/>`,
   { waitUntil: "load" }

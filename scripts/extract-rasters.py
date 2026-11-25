@@ -40,6 +40,14 @@ def main() -> None:
         OUT / "hero-sky-cap.webp", "WEBP", quality=82, method=6
     )
     meta["hero-sky-cap"] = {"size": [720, cap_h]}
+    contrib_top = SECTIONS["contributions"][1]
+    trees = im.crop((0, contrib_top, 720, contrib_top + 120))
+    trees_path = OUT / "contributions-trees.webp"
+    trees.save(trees_path, "WEBP", quality=86, method=6)
+    meta["contributions-trees"] = {
+        "box": (0, contrib_top, 720, contrib_top + 120),
+        "size": [720, 120],
+    }
     cities = im.crop(SECTIONS["cities"])
     for pname, box in {
         "sydney": (10, 58, 238, 252),
