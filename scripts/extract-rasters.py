@@ -17,7 +17,8 @@ SECTIONS = {
     "hero-lower": (0, 118, 720, 486),
     "hero": (0, 0, 720, 486),
     "contributions": (0, 486, 720, 720),
-    "cities": (0, 720, 720, 900),
+    # Skip ~12px at concept y=720: painted contrib grid row (not part of cities art).
+    "cities": (0, 732, 720, 912),
     "planets": (0, 900, 720, 1040),
     "orbital": (0, 1040, 720, 1280),
 }
