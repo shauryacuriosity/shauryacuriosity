@@ -7,3 +7,5 @@ fi
 python3 scripts/build-static-svgs.py
 python3 scripts/build-contributions-svg.py
 python3 scripts/merge-profile-svg.py
+VER="$(git rev-parse --short HEAD 2>/dev/null || echo dev)"
+perl -i -pe "s|src=\"assets/profile\\.svg(\\?v=[^\"]*)?\"|src=\"assets/profile.svg?v=$VER\"|" README.md

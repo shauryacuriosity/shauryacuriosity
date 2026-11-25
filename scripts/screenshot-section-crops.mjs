@@ -30,7 +30,12 @@ for (const c of [
     waitUntil: "networkidle",
     timeout: 90000,
   });
-  await page.waitForTimeout(3000);
+  await page.reload({ waitUntil: "networkidle" });
+  await page.waitForFunction(() => {
+    const img = document.querySelector('img[src*="profile.svg"]');
+    return img && img.naturalHeight >= 1280;
+  }, { timeout: 60000 }).catch(() => {});
+  await page.waitForTimeout(2000);
   await page.screenshot({
     path: join(out, `live-${c.name}.png`),
     fullPage: true,

@@ -90,21 +90,23 @@ def main() -> None:
         prefix_ids(svg, prefix)
         body, defs_children, meta = strip_root(svg)
         master_defs.extend(defs_children)
-        clip_id = f"{prefix}-section-clip"
-        clip_path = ET.Element(svg_tag("clipPath"), {"id": clip_id})
-        ET.SubElement(
-            clip_path,
-            svg_tag("rect"),
-            {"x": "0", "y": "0", "width": "720", "height": str(int(meta["h"]))},
-        )
-        master_defs.append(clip_path)
 
-        g = ET.Element(svg_tag("g"))
-        g.attrib["transform"] = f"translate(0,{y:.3f})"
-        g.attrib["clip-path"] = f"url(#{clip_id})"
+        # Nested SVG slices clip reliably on GitHub (group clip-path often bleeds).
+        layer = ET.Element(
+            svg_tag("svg"),
+            {
+                "x": "0",
+                "y": str(int(y)),
+                "width": str(int(meta["w"])),
+                "height": str(int(meta["h"])),
+                "viewBox": f"0 0 {int(meta['w'])} {int(meta['h'])}",
+                "overflow": "hidden",
+                "aria-hidden": "true",
+            },
+        )
         for el in body:
-            g.append(el)
-        layers.append(g)
+            layer.append(el)
+        layers.append(layer)
         y += meta["h"]
         total_h += meta["h"]
 
