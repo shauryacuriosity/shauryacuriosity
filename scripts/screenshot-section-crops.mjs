@@ -12,6 +12,7 @@ const sections = [
   { name: "hero", y: 0, h: 486 },
   { name: "contributions", y: 486, h: 234 },
   { name: "cities", y: 720, h: 180 },
+  { name: "footer", y: 1040, h: 240 },
 ];
 
 const browser = await chromium.launch({ deviceScaleFactor: 2 });

@@ -77,6 +77,12 @@
     ],
     "bytes": 23812
   },
+  "hero-sky-cap": {
+    "size": [
+      720,
+      56
+    ]
+  },
   "city-sydney": {
     "box": [
       10,

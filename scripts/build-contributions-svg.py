@@ -16,7 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "assets" / "contributions-forest.svg"
 LOGIN = os.environ.get("GITHUB_USER", "shauryacuriosity")
 
-LEVEL_FILL = ["#14201888", "#1d5c3488", "#289450aa", "#3ed878cc", "#6cffaad8"]
+LEVEL_FILL = ["#0c1814", "#1d5c34", "#289450", "#3ed878", "#6cffaa"]
+MONTHS = ["Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"]
 
 QUERY = """
 query($login: String!) {
@@ -71,49 +72,62 @@ def build(calendar: dict) -> str:
     cell, gap = 9, 3
     grid_w = cols * (cell + gap) - gap
     ox = (w - grid_w) / 2
-    oy = 148
+    grid_top = 128
+    oy = 142
+    row_h = cell + gap
+    grid_bottom = oy + 7 * row_h - gap
+    label_y = grid_top + 14
+
     cells = []
     for c, week in enumerate(weeks):
         for r, day in enumerate(week["contributionDays"]):
             count = day["contributionCount"]
             x = ox + c * (cell + gap)
-            y = oy + r * (cell + gap)
-            if y + cell > h - 4:
+            y = oy + r * row_h
+            if r >= 7:
                 continue
             lv = min(4, max(0, (0 if count == 0 else 1 + min(3, count // 4))))
             fill = LEVEL_FILL[lv if count else 0]
             delay = (c * 7 + r) % 40 * 0.07
             cells.append(
                 f'<rect x="{x:.1f}" y="{y:.1f}" width="{cell}" height="{cell}" rx="3.2" fill="{fill}"'
-                f' filter="url(#cellGlow)"><animate attributeName="opacity" values="0.7;1;0.85" dur="3.5s"'
+                f' filter="url(#cellGlow)"><animate attributeName="opacity" values="0.82;1;0.88" dur="3.5s"'
                 f' begin="{delay:.2f}s" repeatCount="indefinite"/></rect>'
             )
+
+    month_xs = [ox + i * (grid_w / (len(MONTHS) - 1)) for i in range(len(MONTHS))]
+    month_labels = "".join(
+        f'<text x="{x:.1f}" y="{label_y}" text-anchor="middle" fill="#8aaa9a" font-family="system-ui,sans-serif" font-size="7.5" letter-spacing="0.04em">{m}</text>'
+        for m, x in zip(MONTHS, month_xs)
+    )
 
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" overflow="hidden" role="img" aria-labelledby="ct cd">
   <title id="ct">Contribution forest</title>
   <desc id="cd">{calendar["totalContributions"]} contributions in the last year.</desc>
   <defs>
-    <clipPath id="gridZone"><rect x="0" y="128" width="{w}" height="106"/></clipPath>
-    <filter id="cellGlow" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="1.1" result="b"/>
+    <clipPath id="gridZone"><rect x="0" y="{grid_top}" width="{w}" height="{grid_bottom - grid_top + 8}"/></clipPath>
+    <linearGradient id="gridShimmer" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a0ffc0" stop-opacity="0"/>
+      <stop offset="48%" stop-color="#d0ffe8" stop-opacity="0.08"/>
+      <stop offset="52%" stop-color="#d0ffe8" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#a0ffc0" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="cellGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="0.8" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#80ffa0" stop-opacity="0"/>
-      <stop offset="45%" stop-color="#b0ffc8" stop-opacity="0.3"/>
-      <stop offset="55%" stop-color="#b0ffc8" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="#80ffa0" stop-opacity="0"/>
-    </linearGradient>
     <style>
-      @keyframes sweep {{ 0% {{ transform: translateX(-720px); }} 100% {{ transform: translateX(720px); }} }}
-      .sweep-bar {{ animation: sweep 7s ease-in-out infinite; }}
-      @media (prefers-reduced-motion: reduce) {{ .sweep-bar, rect animate {{ display: none; }} }}
+      @keyframes softSweep {{ 0% {{ transform: translateX(-540px); opacity: 0; }} 30% {{ opacity: 1; }} 70% {{ opacity: 1; }} 100% {{ transform: translateX(540px); opacity: 0; }} }}
+      .soft-sweep {{ animation: softSweep 11s ease-in-out infinite; }}
+      @media (prefers-reduced-motion: reduce) {{ .soft-sweep, rect animate {{ display: none; }} }}
     </style>
   </defs>
   <image href="{bg}" x="0" y="0" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice"/>
-  <g clip-path="url(#gridZone)" opacity="0.95">{''.join(cells)}</g>
-  <rect class="sweep-bar" clip-path="url(#gridZone)" x="0" y="128" width="720" height="100" fill="url(#sweep)"/>
+  <rect x="0" y="{grid_top - 4}" width="{w}" height="{grid_bottom - grid_top + 28}" fill="#0a1210" opacity="0.94"/>
+  {month_labels}
+  <g clip-path="url(#gridZone)">{''.join(cells)}</g>
+  <rect class="soft-sweep" clip-path="url(#gridZone)" x="-180" y="{oy}" width="360" height="{grid_bottom - oy}" fill="url(#gridShimmer)" opacity="0.5"/>
 </svg>"""
 
 

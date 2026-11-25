@@ -34,6 +34,12 @@ def main() -> None:
         path = OUT / f"{name}.webp"
         c.save(path, "WEBP", quality=85, method=6)
         meta[name] = {"box": box, "size": list(c.size), "bytes": path.stat().st_size}
+    hero_lower = im.crop(SECTIONS["hero-lower"])
+    cap_h = 56
+    hero_lower.crop((0, 0, 720, cap_h)).save(
+        OUT / "hero-sky-cap.webp", "WEBP", quality=82, method=6
+    )
+    meta["hero-sky-cap"] = {"size": [720, cap_h]}
     cities = im.crop(SECTIONS["cities"])
     for pname, box in {
         "sydney": (10, 58, 238, 252),
